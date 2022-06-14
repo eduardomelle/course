@@ -17,7 +17,7 @@ public class CourseModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(generator = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID courseId;
 
     @Column(nullable = false, length = 255)
