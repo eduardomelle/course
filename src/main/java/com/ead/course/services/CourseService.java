@@ -6,4 +6,6 @@ public interface CourseService {
 
     void delete(CourseModel courseModel);
 
+    CourseModel save(CourseModel courseModel);
+
 }
