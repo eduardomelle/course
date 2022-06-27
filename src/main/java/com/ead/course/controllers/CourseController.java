@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -59,6 +60,21 @@ public class CourseController {
         courseModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
 
         return ResponseEntity.status(HttpStatus.OK).body(courseService.save(courseModel));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CourseModel>> getAllCourses() {
+        return ResponseEntity.ok(courseService.findAll());
+    }
+
+    @GetMapping("/courseId")
+    public ResponseEntity<Object> getOneCourse(@PathVariable("courseId") UUID courseId) {
+        Optional<CourseModel> optionalCourseModel = courseService.findById(courseId);
+        if (!optionalCourseModel.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course not found.");
+        }
+
+        return ResponseEntity.ok(optionalCourseModel.get());
     }
 
 }
