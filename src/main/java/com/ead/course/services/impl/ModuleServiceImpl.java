@@ -5,7 +5,6 @@ import com.ead.course.models.ModuleModel;
 import com.ead.course.repositories.LessonRepository;
 import com.ead.course.repositories.ModuleRepository;
 import com.ead.course.services.ModuleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,11 +13,19 @@ import java.util.List;
 @Service
 public class ModuleServiceImpl implements ModuleService {
 
-    @Autowired
-    ModuleRepository moduleRepository;
+    private final ModuleRepository moduleRepository;
 
-    @Autowired
-    LessonRepository lessonRepository;
+    private final LessonRepository lessonRepository;
+
+    public ModuleServiceImpl(ModuleRepository moduleRepository, LessonRepository lessonRepository) {
+        this.moduleRepository = moduleRepository;
+        this.lessonRepository = lessonRepository;
+    }
+
+    @Override
+    public ModuleModel save(ModuleModel moduleModel) {
+        return moduleRepository.save(moduleModel);
+    }
 
     @Transactional
     @Override
