@@ -45,4 +45,32 @@ public class ModuleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(moduleService.save(moduleModel));
     }
 
+    @DeleteMapping("/courses/{courseId}/modules/{moduleId}")
+    public ResponseEntity<Object> deleteModule(@PathVariable(value = "courseId") UUID courseId,
+                                               @PathVariable(value = "moduleId") UUID moduleId) {
+        Optional<ModuleModel> optionalModuleModel = moduleService.findModuleIntoCourse(courseId, moduleId);
+        if (!optionalModuleModel.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Module not found for this course.");
+        }
+
+        moduleService.delete(optionalModuleModel.get());
+
+        return ResponseEntity.ok("Module deleted successfully.");
+    }
+
+    @PutMapping("/courses/{courseId}/modules/{moduleId}")
+    public ResponseEntity<Object> updateModule(@PathVariable(value = "courseId") UUID courseId,
+                                               @PathVariable(value = "moduleId") UUID moduleId,
+                                                @RequestBody @Valid ModuleDto moduleDto) {
+        Optional<ModuleModel> optionalModuleModel = moduleService.findModuleIntoCourse(courseId, moduleId);
+        if (!optionalModuleModel.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Module not found for this course.");
+        }
+
+        var moduleModel = optionalModuleModel.get();
+        BeanUtils.copyProperties(moduleDto, moduleModel);
+
+        return ResponseEntity.ok(moduleService.save(moduleModel));
+    }
+
 }
