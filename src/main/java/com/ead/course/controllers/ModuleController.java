@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -71,6 +72,12 @@ public class ModuleController {
         BeanUtils.copyProperties(moduleDto, moduleModel);
 
         return ResponseEntity.ok(moduleService.save(moduleModel));
+    }
+
+    @GetMapping("/courses/{courseId}/modules")
+    public ResponseEntity<List<ModuleModel>> getAllModules(
+            @PathVariable(value = "courseId") UUID courseId) {
+        return ResponseEntity.ok(moduleService.findAllByCourse(courseId));
     }
 
 }
