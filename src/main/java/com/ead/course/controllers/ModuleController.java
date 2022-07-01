@@ -80,4 +80,17 @@ public class ModuleController {
         return ResponseEntity.ok(moduleService.findAllByCourse(courseId));
     }
 
+    @GetMapping("/courses/{courseId}/modules/{moduleId}")
+    public ResponseEntity<Object> getOneModule(
+            @PathVariable(value = "courseId") UUID courseId,
+            @PathVariable(value = "moduleId") UUID moduleId
+    ) {
+        Optional<ModuleModel> optionalModuleModel = moduleService.findModuleIntoCourse(courseId, moduleId);
+        if (!optionalModuleModel.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Module not found for this course.");
+        }
+
+        return ResponseEntity.ok(optionalModuleModel.get());
+    }
+
 }
