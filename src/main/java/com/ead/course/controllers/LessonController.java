@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -56,6 +57,40 @@ public class LessonController {
         lessonService.delete(optionalLessonModel.get());
 
         return ResponseEntity.ok("Lesson deleted successfully.");
+    }
+
+    @PutMapping("/modules/{moduleId}/lessons/{lessonId}")
+    public ResponseEntity<Object> updateLesson(@PathVariable(value = "moduleId") UUID moduleId,
+                                               @PathVariable(value = "lessonId") UUID lessonId,
+                                               @RequestBody @Valid LessonDto lessonDto) {
+        Optional<LessonModel> optionalLessonModel = lessonService.findLessonIntoModule(moduleId, lessonId);
+        if (!optionalLessonModel.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lesson not found for this module.");
+        }
+
+        var lessonModel = optionalLessonModel.get();
+        BeanUtils.copyProperties(lessonDto, lessonModel);
+
+        return ResponseEntity.ok(lessonService.save(lessonModel));
+    }
+
+    @GetMapping("/modules/{moduleId}/lessons")
+    public ResponseEntity<List<LessonModel>> getAllLessons(
+            @PathVariable(value = "moduleId") UUID moduleId) {
+        return ResponseEntity.ok(lessonService.findAllByModule(moduleId));
+    }
+
+    @GetMapping("/modules/{moduleId}/lessons/{lessonId}")
+    public ResponseEntity<Object> getOneLesson(
+            @PathVariable(value = "moduleId") UUID moduleId,
+            @PathVariable(value = "lessonId") UUID lessonId
+    ) {
+        Optional<LessonModel> optionalLessonModel = lessonService.findLessonIntoModule(moduleId, lessonId);
+        if (!optionalLessonModel.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lesson not found for this module.");
+        }
+
+        return ResponseEntity.ok(optionalLessonModel.get());
     }
 
 }
