@@ -1,6 +1,8 @@
 package com.ead.course.specifications;
 
 import com.ead.course.models.CourseModel;
+import com.ead.course.models.LessonModel;
+import com.ead.course.models.ModuleModel;
 import net.kaczmarzyk.spring.data.jpa.domain.Equal;
 import net.kaczmarzyk.spring.data.jpa.domain.Like;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.And;
@@ -15,6 +17,14 @@ public class SpecificationTemplate {
     @Spec(path = "name", spec = Like.class)
     })
     public interface CourseSpec extends Specification<CourseModel>{
+    }
+
+    @Spec(path = "title", spec = Like.class)
+    public interface ModuleSpec extends Specification<ModuleModel>{
+    }
+
+    @Spec(path = "title", spec = Like.class)
+    public interface LessonSpec extends Specification<LessonModel>{
     }
 
 }
